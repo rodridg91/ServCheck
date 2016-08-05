@@ -4,14 +4,15 @@
     android:layout_height="wrap_content"
     android:gravity="fill_horizontal"
     android:padding="2dp"
-    android:contentDescription="Estado del Servicio">
+    android:contentDescription="Estado del Servicio"
+    android:id="@+id/service_element">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Medium Text"
-        android:id="@+id/textView" />
+        android:id="@+id/serviceName" />
 
     <ImageView
         android:layout_width="wrap_content"
