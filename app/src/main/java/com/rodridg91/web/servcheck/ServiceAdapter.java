@@ -1,10 +1,12 @@
 package com.rodridg91.web.servcheck;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -50,11 +52,14 @@ public class ServiceAdapter extends BaseAdapter {
         }
 
         //Seteamos la informacion del View.
-        TextView serviceName = (TextView) rowView.findViewById(R.id.serviceName) ;
+            TextView serviceName = (TextView) rowView.findViewById(R.id.serviceName) ;
+            ImageView stateView = (ImageView) rowView.findViewById(R.id.serviceIcon) ;
 
         Service service = this.services.get(position);
         serviceName.setText(service.getName());
-
+        if (service.getState()){
+           stateView.setBackgroundResource(R.drawable.status_up);
+        }else {stateView.setBackgroundResource(R.drawable.status_down);}
 
         return rowView;
     }

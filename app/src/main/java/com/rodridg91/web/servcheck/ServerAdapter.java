@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -57,12 +58,25 @@ public class ServerAdapter extends BaseAdapter{
 
         //Seteamos la informacion del View.
         TextView serverName = (TextView) rowView.findViewById(R.id.serverName) ;
+        ImageView serverStatus = (ImageView) rowView.findViewById(R.id.serverIcon);
 
         Server server = this.servers.get(position);
         serverName.setText(server.getName());
 
         server.setServicesList((ListView) rowView.findViewById(R.id.servicesList));
         server.setServicesListAdapter(new ServiceAdapter(context, server.getServices()));
+
+        switch (server.getStatus()){
+            case "up":
+                serverStatus.setBackgroundResource(R.drawable.status_up);
+                break;
+            case "half":
+                serverStatus.setBackgroundResource(R.drawable.status_half);
+                break;
+            case "down":
+                serverStatus.setBackgroundResource(R.drawable.status_down);
+                break;
+        }
 
         return rowView;
     }

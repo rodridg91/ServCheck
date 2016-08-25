@@ -1,8 +1,5 @@
 package com.rodridg91.web.servcheck;
 
-import android.text.Editable;
-import android.widget.ListView;
-
 import java.io.Serializable;
 
 /**
@@ -11,6 +8,7 @@ import java.io.Serializable;
 public class Service implements Serializable{
     private String name;
     private int port;
+    private Boolean state = false;
 
 
     public Service(String name, int port){
@@ -27,7 +25,11 @@ public class Service implements Serializable{
         return this.name;
     }
 
-    public int getUrl(){
+    public int getPort(){
         return this.port;
     }
+
+    public Boolean getState(){return this.state;}
+
+    public void setState(Boolean state){this.state=state;}
 }

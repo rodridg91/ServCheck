@@ -2,6 +2,7 @@ package com.rodridg91.web.servcheck;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +27,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (android.os.Build.VERSION.SDK_INT > 9) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -33,11 +38,10 @@ public class MainActivity extends AppCompatActivity {
         this.serversList = (ListView) findViewById(R.id.serverList);
 
 
-        services.add(new Service("primero",1));
-        services.add(new Service("segundo",2));
-        services.add(new Service("tercero",3));
 
-        servers.add(new Server("Creado a mano","url",services));
+        services.add(new Service("http",80));
+
+        servers.add(new Server("Creado a mano","www.google.com",services));
         this.serversList.setAdapter(new ServerAdapter(this,servers));
 
 

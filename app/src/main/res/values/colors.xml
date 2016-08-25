@@ -2,5 +2,8 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#FF3844B3</color>
+    <color name="stateUp">#FF1D8800</color>>
+    <color name="stateDown">#FFC90000</color>
+    <color name="stateHalf">#FFFFDD00</color>
 </resources>
