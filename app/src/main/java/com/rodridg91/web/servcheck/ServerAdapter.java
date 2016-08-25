@@ -1,6 +1,7 @@
 package com.rodridg91.web.servcheck;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import android.support.v7.app.AppCompatActivity;
+
 
 /**
  * Created by rodridg91 on 04/08/2016.
@@ -53,18 +57,15 @@ public class ServerAdapter extends BaseAdapter{
 
         //Seteamos la informacion del View.
         TextView serverName = (TextView) rowView.findViewById(R.id.serverName) ;
-        ListView servicesList = (ListView) rowView.findViewById(R.id.servicesList);
-
 
         Server server = this.servers.get(position);
         serverName.setText(server.getName());
-        //Creamos la lista de servicios.
-        List services = new ArrayList();
-        services.add(new Service("Http",80));
-        //Cargamos el servicio.
-        servicesList.setAdapter(new ServiceAdapter(context,services));
-        server.setServicesList(servicesList);
+
+        server.setServicesList((ListView) rowView.findViewById(R.id.servicesList));
+        server.setServicesListAdapter(new ServiceAdapter(context, server.getServices()));
 
         return rowView;
     }
+
+
 }

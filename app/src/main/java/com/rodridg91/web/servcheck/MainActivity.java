@@ -1,5 +1,6 @@
 package com.rodridg91.web.servcheck;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,6 +17,10 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private ListView serversList;
+    private List servers = new ArrayList();
+    private List services = new ArrayList();
+    private int request_code=1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,25 +29,41 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //Creamos la lista de servidores.
+        //Creamos la lista de servidores
         this.serversList = (ListView) findViewById(R.id.serverList);
-        List servers = new ArrayList();
-        //Cargamos el servidor
-        servers.add(new Server("Mi Servidor","serv-rodrigo.no-ip.org"));
-        this.serversList.setAdapter(new ServerAdapter(this, servers));
+
+
+        services.add(new Service("primero",1));
+        services.add(new Service("segundo",2));
+        services.add(new Service("tercero",3));
+
+        servers.add(new Server("Creado a mano","url",services));
+        this.serversList.setAdapter(new ServerAdapter(this,servers));
+
 
         //Creamos addButton
         FloatingActionButton addButton = (FloatingActionButton) findViewById(R.id.addButton);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onClick(View view) {
+                Intent i = new Intent(MainActivity.this, CargaDeServer.class);
+                startActivityForResult(i, request_code);
             }
         });
 
 
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if ((requestCode == request_code) && (resultCode == RESULT_OK)) {
+            if (data.getSerializableExtra("objeto") != null) {
+                //Cargamos el servidor
+                servers.add(data.getSerializableExtra("objeto"));
+                this.serversList.setAdapter(new ServerAdapter(this, servers));
+            }
+        }
     }
 
     @Override

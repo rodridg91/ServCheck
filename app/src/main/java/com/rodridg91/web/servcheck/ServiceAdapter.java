@@ -52,7 +52,6 @@ public class ServiceAdapter extends BaseAdapter {
         //Seteamos la informacion del View.
         TextView serviceName = (TextView) rowView.findViewById(R.id.serviceName) ;
 
-
         Service service = this.services.get(position);
         serviceName.setText(service.getName());
 
