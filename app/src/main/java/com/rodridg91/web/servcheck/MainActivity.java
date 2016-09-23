@@ -1,10 +1,11 @@
 package com.rodridg91.web.servcheck;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -12,6 +13,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,12 +43,28 @@ public class MainActivity extends AppCompatActivity {
         //Creamos la lista de servidores
         this.serversList = (ListView) findViewById(R.id.serverList);
 
+        Type t = new TypeToken<ArrayList<ServJSON>>() {}.getType();
+        String servidores;
+        SharedPreferences prefe = getSharedPreferences("Servidores", Context.MODE_PRIVATE);
+        servidores = prefe.getString("Servidores", null);
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Server.class, new ServerDeserialiser());
+        Gson gson = gsonBuilder.create();
+        ArrayList<ServJSON> resultado = gson.fromJson(servidores,t);
+        if (resultado != null){
+            if (!resultado.isEmpty()) {
+                for (int j = 0; j < resultado.size(); j++) {
+                    servers.add(new Server(resultado.get(j)));
+                }
+            }
+        }
+        this.serversList.setAdapter(new ServerAdapter(this, servers));
 
 
-        services.add(new Service("http",80));
+       // services.add(new Service("http",80));
 
-        servers.add(new Server("Creado a mano","www.google.com",services));
-        this.serversList.setAdapter(new ServerAdapter(this,servers));
+       // servers.add(new Server("Creado a mano","www.google.com",services));
+       // this.serversList.setAdapter(new ServerAdapter(this,servers));
 
 
         //Creamos addButton
@@ -60,15 +82,45 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if ((requestCode == request_code) && (resultCode == RESULT_OK)) {
+            if (servers == null) {servers = new ArrayList();}
             if (data.getSerializableExtra("objeto") != null) {
                 //Cargamos el servidor
                 servers.add(data.getSerializableExtra("objeto"));
                 this.serversList.setAdapter(new ServerAdapter(this, servers));
             }
+            for (int i=0; i<servers.size(); i++){
+                Server serv = (Server) servers.get(i);
+                serv.checkStatus();
+            }
         }
     }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        Gson userJson = new Gson();
+        ArrayList<ServJSON> jservers= new ArrayList<>();
+
+
+        for (int i=0; i<servers.size(); i++){
+            jservers.add(new ServJSON((Server) servers.get(i)));
+        }
+        String servidores=userJson.toJson(jservers);
+        SharedPreferences prefe = getSharedPreferences("Servidores", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefe.edit();
+        editor.putString("Servidores", servidores);
+        editor.commit();
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

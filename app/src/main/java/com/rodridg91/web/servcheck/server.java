@@ -29,6 +29,14 @@ public class Server implements Serializable {
         this.checkStatus();
     }
 
+    public Server(ServJSON server){
+        super();
+        this.name=server.getName();
+        this.url=server.getUrl();
+        this.state=server.getState();
+        this.services=server.getServices();
+        this.checkStatus();
+    }
 
     public String getName() {
         return this.name;
@@ -73,7 +81,7 @@ public class Server implements Serializable {
             SocketAddress host = new InetSocketAddress(url,service.getPort());
             Socket ping = new Socket();
             service.setState(true);
-
+            state="up";
 
             try {
                 ping.connect(host,10000);
