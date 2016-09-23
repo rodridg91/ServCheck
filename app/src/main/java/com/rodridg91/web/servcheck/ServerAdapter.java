@@ -5,10 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -53,18 +53,28 @@ public class ServerAdapter extends BaseAdapter{
 
         //Seteamos la informacion del View.
         TextView serverName = (TextView) rowView.findViewById(R.id.serverName) ;
-        ListView servicesList = (ListView) rowView.findViewById(R.id.servicesList);
-
+        ImageView serverStatus = (ImageView) rowView.findViewById(R.id.serverIcon);
 
         Server server = this.servers.get(position);
         serverName.setText(server.getName());
-        //Creamos la lista de servicios.
-        List services = new ArrayList();
-        services.add(new Service("Http",80));
-        //Cargamos el servicio.
-        servicesList.setAdapter(new ServiceAdapter(context,services));
-        server.setServicesList(servicesList);
+
+        server.setServicesList((ListView) rowView.findViewById(R.id.servicesList));
+        server.setServicesListAdapter(new ServiceAdapter(context, server.getServices()));
+
+        switch (server.getStatus()){
+            case "up":
+                serverStatus.setBackgroundResource(R.drawable.status_up);
+                break;
+            case "half":
+                serverStatus.setBackgroundResource(R.drawable.status_half);
+                break;
+            case "down":
+                serverStatus.setBackgroundResource(R.drawable.status_down);
+                break;
+        }
 
         return rowView;
     }
+
+
 }
